@@ -18,8 +18,8 @@ const AuthModal = ({ isOpen, onClose }) => {
     setLoading(true);
     setError('');
 
-    // Проверка на совпадение паролей при регистрации
-    if (!isLogin && password !== confirmPassword) {
+    // Проверка на совпадение паролей ТОЛЬКО при регистрации
+    if (!isLogin && !showAdminLogin && password !== confirmPassword) {
       setError('Пароли не совпадают');
       setLoading(false);
       return;
@@ -83,6 +83,13 @@ const AuthModal = ({ isOpen, onClose }) => {
     setError('');
   };
 
+  const switchMode = () => {
+    setIsLogin(!isLogin);
+    setError('');
+    setConfirmPassword('');
+    setPassword('');
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
       <div className="bg-[#2D3748] rounded-[32px] p-8 max-w-md w-full border border-[#4A5568] shadow-2xl" onClick={e => e.stopPropagation()}>
@@ -113,7 +120,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             required
           />
           
-          {/* Поле "Повторите пароль" только для регистрации */}
+          {/* Поле "Повторите пароль" ТОЛЬКО для регистрации */}
           {!isLogin && !showAdminLogin && (
             <input
               type="password"
@@ -158,11 +165,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         
         {!showAdminLogin && (
           <button
-            onClick={() => {
-              setIsLogin(!isLogin);
-              setError('');
-              setConfirmPassword('');
-            }}
+            onClick={switchMode}
             className="w-full mt-2 text-[#CBD5E0] hover:text-[#F6AD55] text-sm transition-colors"
           >
             {isLogin ? 'Нет аккаунта? Зарегистрироваться' : 'Уже есть аккаунт? Войти'}
